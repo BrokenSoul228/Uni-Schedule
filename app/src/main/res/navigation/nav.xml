@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav"
+    app:startDestination="@id/mainFragment">
+
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="com.example.university_schedule.MainFragment"
+        android:label="fragment_main"
+        tools:layout="@layout/fragment_main" >
+        <action
+            android:id="@+id/action_mainFragment_to_listDayOfWeekFragment"
+            app:destination="@id/listDayOfWeekFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/listDayOfWeekFragment"
+        android:name="com.example.university_schedule.ListDayOfWeekFragment"
+        android:label="fragment_list_day_of_week"
+        tools:layout="@layout/fragment_list_day_of_week" >
+        <action
+            android:id="@+id/action_listDayOfWeekFragment_to_mondayFragment"
+            app:destination="@id/mondayFragment" />
+        <action
+            android:id="@+id/action_listDayOfWeekFragment_to_thuesdayFragment"
+            app:destination="@id/thuesdayFragment" />
+        <action
+            android:id="@+id/action_listDayOfWeekFragment_to_wednesdayFragment"
+            app:destination="@id/wednesdayFragment" />
+        <action
+            android:id="@+id/action_listDayOfWeekFragment_to_thursdayFragment"
+            app:destination="@id/thursdayFragment" />
+        <action
+            android:id="@+id/action_listDayOfWeekFragment_to_fridayFragment"
+            app:destination="@id/fridayFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/mondayFragment"
+        android:name="com.example.university_schedule.week.MondayFragment"
+        android:label="MondayFragment" />
+    <fragment
+        android:id="@+id/thuesdayFragment"
+        android:name="com.example.university_schedule.week.ThuesdayFragment"
+        android:label="fragment_thuesday"
+        tools:layout="@layout/fragment_thuesday" />
+    <fragment
+        android:id="@+id/wednesdayFragment"
+        android:name="com.example.university_schedule.week.WednesdayFragment"
+        android:label="fragment_wednesday"
+        tools:layout="@layout/fragment_wednesday" />
+    <fragment
+        android:id="@+id/thursdayFragment"
+        android:name="com.example.university_schedule.week.ThursdayFragment"
+        android:label="fragment_thursday"
+        tools:layout="@layout/fragment_thursday" />
+    <fragment
+        android:id="@+id/fridayFragment"
+        android:name="com.example.university_schedule.week.FridayFragment"
+        android:label="fragment_friday"
+        tools:layout="@layout/fragment_friday" />
+</navigation>
