@@ -3,18 +3,29 @@ package com.example.university_schedule.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import android.widget.EditText
 import androidx.recyclerview.widget.RecyclerView
 import com.example.university_schedule.dto.ItemData
 import com.example.university_schedule.R
 
 class RecycleAdapterItem(private val itemList: MutableList<ItemData>) : RecyclerView.Adapter<RecycleAdapterItem.ViewHolder>() {
+    private var isItemUpdatedList: MutableList<Boolean> = MutableList(itemList.size) { false }
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val lessonNameEdit = itemView.findViewById<AutoCompleteTextView>(R.id.lessonName)
+        val lessonTimeEdit = itemView.findViewById<AutoCompleteTextView>(R.id.lessonTime)
+        val lessonPracticsEdit = itemView.findViewById<AutoCompleteTextView>(R.id.lessonPracticsText)
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
-        val lessonNameEdit = itemView.findViewById<EditText>(R.id.lessonName)
-        val lessonTimeEdit = itemView.findViewById<EditText>(R.id.lessonTime)
-        val lessonPracticsEdit = itemView.findViewById<EditText>(R.id.lessonPracticsText)
+        fun getSelectedValues(): Triple<String, String, String> {
+            return Triple(
+                lessonNameEdit.text.toString(),
+                lessonTimeEdit.text.toString(),
+                lessonPracticsEdit.text.toString()
+            )
+        }
     }
+
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -26,19 +37,32 @@ class RecycleAdapterItem(private val itemList: MutableList<ItemData>) : Recycler
 
     override fun onBindViewHolder(holder: RecycleAdapterItem.ViewHolder, position: Int) {
         val currentItem = itemList[position]
+        val autoAdapterTime = ArrayAdapter(holder.itemView.context, androidx.appcompat.R.layout.support_simple_spinner_dropdown_item, currentItem.lessonTime)
+        val autoAdapterName = ArrayAdapter(holder.itemView.context, androidx.appcompat.R.layout.support_simple_spinner_dropdown_item, currentItem.lessonName)
+        val autoAdapterPrac = ArrayAdapter(holder.itemView.context, androidx.appcompat.R.layout.support_simple_spinner_dropdown_item, currentItem.lessonPractics)
 
-        holder.lessonNameEdit.setText(currentItem.lessonName)
-        holder.lessonTimeEdit.setText(currentItem.lessonTime)
-        holder.lessonPracticsEdit.setText(currentItem.lessonPractics)
+        if (isItemUpdatedList[position]) {
+            holder.lessonNameEdit.setText(currentItem.lessonName[position])
+            holder.lessonTimeEdit.setText(currentItem.lessonTime[position])
+            holder.lessonPracticsEdit.setText(currentItem.lessonPractics[position])
+        }
+
+        holder.lessonNameEdit.setAdapter(autoAdapterName)
+        holder.lessonTimeEdit.setAdapter(autoAdapterTime)
+        holder.lessonPracticsEdit.setAdapter(autoAdapterPrac)
+
+        // Сброс флага после установки текста
+        isItemUpdatedList[position] = false
     }
 
     override fun getItemCount(): Int {
         return itemList.size
     }
 
-    fun addItem(){
+    fun addItem(name: List<String>,time: List<String>,prac: List<String>){
         val newPosition = itemCount
-        itemList.add(ItemData(newPosition,"","",""))
+        itemList.add(ItemData(name,time,prac))
+        isItemUpdatedList.add(false)
         notifyItemInserted(itemList.size - 1)
     }
 
@@ -46,7 +70,9 @@ class RecycleAdapterItem(private val itemList: MutableList<ItemData>) : Recycler
         return itemList
     }
 
-    fun updateData(newData : List<ItemData>){
+    fun updateData(newData: List<ItemData>) {
+        isItemUpdatedList.clear()
+        isItemUpdatedList.addAll(List(newData.size) { true })
         itemList.clear()
         itemList.addAll(newData)
         notifyDataSetChanged()

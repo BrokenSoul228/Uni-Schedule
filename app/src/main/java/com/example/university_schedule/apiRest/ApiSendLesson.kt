@@ -6,6 +6,6 @@ import retrofit2.http.Body
 import retrofit2.http.POST
 
 interface ApiSendLesson {
-    @POST
-    fun sendLesson(@Body data: List<ItemData>) : Call<Void>
+    @POST("/strings")
+    fun sendLesson(@Body item: MutableList<String>) : Call<Void>
 }

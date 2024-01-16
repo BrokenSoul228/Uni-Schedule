@@ -30,44 +30,47 @@ class ThursdayFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentThursdayBinding.inflate(inflater, container, false)
-        itemAdapter = RecycleAdapterItem(mutableListOf())
+//        itemAdapter = RecycleAdapterItem(mutableListOf())
         binding.recyclerView.adapter = itemAdapter
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
+        val listName = listOf<String>("ПДИ", "ПМС")
+        val listTime = listOf<String>("8:00", "9:00")
+        val listPrac = listOf<String>("Лекция", "Практика", "Лабораторная")
         binding.addLesson.setOnClickListener {
-            itemAdapter.addItem()
+//            itemAdapter.addItem()
         }
         binding.saveLesson.setOnClickListener {
-            sendLessonData(requireContext(), itemAdapter.getItemList())
+//            sendLessonData(requireContext(), itemAdapter.getItemList())
         }
         return binding.root
     }
 
-    fun fetchData() {
-        val retrofit = Retrofit.Builder()
-            .baseUrl("")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-            .create(FetchDataFromServer::class.java)
-
-        val call : Call<List<ItemData>> = retrofit.fetchData()
-
-        call.enqueue(object : Callback<List<ItemData>> {
-            override fun onResponse(
-                call: Call<List<ItemData>>,
-                response: Response<List<ItemData>>
-            ) {
-                if(response.isSuccessful){
-                    val serverResponse = response.body()
-                    serverResponse?.let {
-                        itemAdapter.updateData(it)
-                        Toast.makeText(context, "Обновлено", Toast.LENGTH_SHORT).show()
-                    }
-                }
-            }
-
-            override fun onFailure(call: Call<List<ItemData>>, t: Throwable) {
-                Toast.makeText(context, "Failure", Toast.LENGTH_SHORT).show()
-            }
-        })
-    }
+//    fun fetchData() {
+//        val retrofit = Retrofit.Builder()
+//            .baseUrl("")
+//            .addConverterFactory(GsonConverterFactory.create())
+//            .build()
+//            .create(FetchDataFromServer::class.java)
+//
+//        val call : Call<List<ItemData>> = retrofit.fetchData()
+//
+//        call.enqueue(object : Callback<List<ItemData>> {
+//            override fun onResponse(
+//                call: Call<List<ItemData>>,
+//                response: Response<List<ItemData>>
+//            ) {
+//                if(response.isSuccessful){
+//                    val serverResponse = response.body()
+//                    serverResponse?.let {
+//                        itemAdapter.updateData(it)
+//                        Toast.makeText(context, "Обновлено", Toast.LENGTH_SHORT).show()
+//                    }
+//                }
+//            }
+//
+//            override fun onFailure(call: Call<List<ItemData>>, t: Throwable) {
+//                Toast.makeText(context, "Failure", Toast.LENGTH_SHORT).show()
+//            }
+//        })
+//    }
 }

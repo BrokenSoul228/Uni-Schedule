@@ -6,6 +6,6 @@ import com.example.university_schedule.dto.ServerResponse
 import retrofit2.http.GET
 
 interface FetchDataFromServer {
-    @GET("fetchData")
-    fun fetchData(): retrofit2.Call<List<ItemData>>
+    @GET("lists")
+    fun fetchData(): retrofit2.Call<ItemData>
 }
