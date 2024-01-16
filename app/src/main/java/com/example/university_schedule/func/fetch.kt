@@ -1,4 +1,4 @@
-package com.example.university_schedule
+package com.example.university_schedule.func
 
 import android.content.Context
 import android.util.Log

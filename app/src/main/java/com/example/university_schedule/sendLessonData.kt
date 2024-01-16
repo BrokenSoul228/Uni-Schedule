@@ -11,7 +11,7 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-fun sendLessonData(context : Context, item: MutableList<String>) {
+fun sendLessonData(id: String,context : Context, item: MutableList<String>) {
     val shared = context.getSharedPreferences("ServerId", Context.MODE_PRIVATE)
     var editor = shared?.getString("serverId" , "")
     if (editor?.isEmpty() == true || editor?.isBlank() == true){
@@ -23,7 +23,7 @@ fun sendLessonData(context : Context, item: MutableList<String>) {
         .addConverterFactory(GsonConverterFactory.create())
         .build()
         .create(ApiSendLesson::class.java)
-    val call: Call<Void> = retrofit.sendLesson(item)
+    val call: Call<Void> = retrofit.sendLesson(item, id)
     call.enqueue(object : Callback<Void> {
         override fun onResponse(call: Call<Void>, response: Response<Void>) {
             Toast.makeText(context, "Успешно", Toast.LENGTH_SHORT).show()

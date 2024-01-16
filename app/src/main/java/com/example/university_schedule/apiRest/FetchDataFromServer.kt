@@ -4,6 +4,7 @@ import android.telecom.Call
 import com.example.university_schedule.dto.ItemData
 import com.example.university_schedule.dto.ServerResponse
 import retrofit2.http.GET
+import retrofit2.http.Query
 
 interface FetchDataFromServer {
     @GET("lists")

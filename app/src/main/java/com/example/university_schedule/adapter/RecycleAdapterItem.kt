@@ -9,8 +9,9 @@ import android.widget.EditText
 import androidx.recyclerview.widget.RecyclerView
 import com.example.university_schedule.dto.ItemData
 import com.example.university_schedule.R
+import com.google.android.material.textfield.TextInputLayout
 
-class RecycleAdapterItem(private val itemList: MutableList<ItemData>) : RecyclerView.Adapter<RecycleAdapterItem.ViewHolder>() {
+class RecycleAdapterItem(private var isButtonEnabled: Boolean, private val itemList: MutableList<ItemData>) : RecyclerView.Adapter<RecycleAdapterItem.ViewHolder>() {
     private var isItemUpdatedList: MutableList<Boolean> = MutableList(itemList.size) { false }
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val lessonNameEdit = itemView.findViewById<AutoCompleteTextView>(R.id.lessonName)
@@ -40,18 +41,18 @@ class RecycleAdapterItem(private val itemList: MutableList<ItemData>) : Recycler
         val autoAdapterTime = ArrayAdapter(holder.itemView.context, androidx.appcompat.R.layout.support_simple_spinner_dropdown_item, currentItem.lessonTime)
         val autoAdapterName = ArrayAdapter(holder.itemView.context, androidx.appcompat.R.layout.support_simple_spinner_dropdown_item, currentItem.lessonName)
         val autoAdapterPrac = ArrayAdapter(holder.itemView.context, androidx.appcompat.R.layout.support_simple_spinner_dropdown_item, currentItem.lessonPractics)
-
         if (isItemUpdatedList[position]) {
-            holder.lessonNameEdit.setText(currentItem.lessonName[position])
-            holder.lessonTimeEdit.setText(currentItem.lessonTime[position])
-            holder.lessonPracticsEdit.setText(currentItem.lessonPractics[position])
+                holder.lessonNameEdit.setText(currentItem.lessonName.joinToString(separator = ","))
+                holder.lessonTimeEdit.setText(currentItem.lessonTime.joinToString(separator = ","))
+                holder.lessonPracticsEdit.setText(currentItem.lessonPractics.joinToString(separator = ","))
         }
+        holder.lessonNameEdit.isEnabled = isButtonEnabled
+        holder.lessonTimeEdit.isEnabled = isButtonEnabled
+        holder.lessonPracticsEdit.isEnabled = isButtonEnabled
 
         holder.lessonNameEdit.setAdapter(autoAdapterName)
         holder.lessonTimeEdit.setAdapter(autoAdapterTime)
         holder.lessonPracticsEdit.setAdapter(autoAdapterPrac)
-
-        // Сброс флага после установки текста
         isItemUpdatedList[position] = false
     }
 

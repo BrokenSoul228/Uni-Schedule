@@ -6,21 +6,16 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.university_schedule.adapter.RecycleAdapterItem
-import com.example.university_schedule.apiRest.FetchDataFromServer
 import com.example.university_schedule.databinding.FragmentMondayBinding
 import com.example.university_schedule.dto.ItemData
-import com.example.university_schedule.fetchData
+import com.example.university_schedule.func.fetchData
 import com.example.university_schedule.sendLessonData
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import com.example.university_schedule.takeData
 
 class MondayFragment : Fragment() {
 
@@ -28,6 +23,7 @@ class MondayFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var itemAdapter : RecycleAdapterItem
     private lateinit var list: ItemData
+    private lateinit var listData: List<ItemData>
     private var selectedItem  = mutableListOf<String>()
     private var selectedValues = Triple<String, String, String>("","","")
 
@@ -36,10 +32,34 @@ class MondayFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentMondayBinding.inflate(inflater, container, false)
-        itemAdapter = RecycleAdapterItem(mutableListOf())
-        fetchData(requireContext(),itemAdapter){
-            list = it
-            itemAdapter.addItem(list.lessonName, list.lessonTime,list.lessonPractics)
+        val shared = context?.getSharedPreferences("UserId", Context.MODE_PRIVATE)
+        val editor = shared?.getString("ID", "")
+        Log.d("QQQQQ", editor.toString())
+        when(editor.toString()){
+            "0" -> {itemAdapter = RecycleAdapterItem(true, mutableListOf())}
+            "1" -> {itemAdapter = RecycleAdapterItem(true, mutableListOf())}
+            "2" -> {itemAdapter = RecycleAdapterItem(false, mutableListOf())
+                binding.addLesson.isVisible = false
+                binding.saveLesson.isVisible = false
+            }
+        }
+        listData = listOf()
+        when(editor.toString()){
+            "2" -> {takeData(requireContext(), "monday") { data ->
+            val items = mutableListOf<ItemData>()
+            for (i in data) {
+                val columns = i.split(",")
+                val item = ItemData(mutableListOf(columns[0]), mutableListOf(columns[2]), mutableListOf(columns[1]))
+                items.add(item)
+            }
+            itemAdapter.updateData(items)
+        }}
+            else -> {
+                fetchData(requireContext(),itemAdapter){
+                    list = it
+                    itemAdapter.addItem(list.lessonName, list.lessonTime,list.lessonPractics)
+                }
+            }
         }
         binding.recyclerView.adapter = itemAdapter
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
@@ -57,17 +77,9 @@ class MondayFragment : Fragment() {
                     selectedItem.add(selectedValues.toString())
                 }
             }
-            sendLessonData(requireContext(),selectedItem)
+            sendLessonData("monday",requireContext(),selectedItem)
             Log.d("LIST", selectedItem.toString())
         }
         return binding.root
-    }
-
-    fun shared(){
-        val shared = context?.getSharedPreferences("ServerId", Context.MODE_PRIVATE)
-        var editor = shared?.getString("serverId" , "")
-        if (editor?.isEmpty() == true || editor?.isBlank() == true){
-            editor = "http://192.168.246.171:8080/"
-        }
     }
 }

@@ -3,15 +3,15 @@ package com.example.university_schedule
 import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.widget.doAfterTextChanged
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.university_schedule.databinding.FragmentMainBinding
-import com.example.university_schedule.dto.User
 import com.google.android.material.textfield.TextInputLayout
 
 class MainFragment : Fragment() {
@@ -53,19 +53,18 @@ class MainFragment : Fragment() {
                     }
                 }
             } else if (binding.edEmail.text?.isNotEmpty() == true && binding.edPassword.text?.isNotEmpty()== true) {
-                val user = User(binding.edEmail.text.toString(), binding.edEmail.text.toString())
                 loginMethod.accessLogin(binding.edEmail.text.toString(), binding.edPassword.text.toString(), requireContext()){
-                    findNavController().navigate(R.id.action_mainFragment_to_listDayOfWeekFragment)
-//                    when(it){
-//                        "1" -> {shared(it)
-//                        findNavController().navigate(R.id.action_mainFragment_to_listDayOfWeekFragment)}
-//                        "2" -> {shared(it)
-//                            findNavController().navigate(R.id.action_mainFragment_to_listDayOfWeekFragment)}
-//                        "3" -> {shared(it)
-//                            findNavController().navigate(R.id.action_mainFragment_to_listDayOfWeekFragment)}
-//                        else ->{ Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()}
-//                    }
+                    when(it){
+                        "0" -> {shared(it)
+                        findNavController().navigate(R.id.action_mainFragment_to_listDayOfWeekFragment)}
+                        "1" -> {shared(it)
+                            findNavController().navigate(R.id.action_mainFragment_to_listDayOfWeekFragment)}
+                        "2" -> {shared(it)
+                            findNavController().navigate(R.id.action_mainFragment_to_listDayOfWeekFragment)}
+                        else ->{ Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()}
+                    }
                 }
+                Toast.makeText(requireContext(), "Нет доступа к серверу", Toast.LENGTH_SHORT).show()
             }
             else Toast.makeText(requireContext(), "Вообще все ифы не прошел", Toast.LENGTH_SHORT).show()
         }
@@ -83,13 +82,9 @@ class MainFragment : Fragment() {
             val enteredText = input
             saveAddressServer(enteredText.toString())
         }
-
-        // Установка кнопки "Отмена" для закрытия диалогового окна
         builder.setNegativeButton("Отмена") { dialog, which ->
             dialog.cancel()
         }
-
-        // Отображение диалогового окна
         builder.show()
     }
 
@@ -101,5 +96,6 @@ class MainFragment : Fragment() {
     fun shared(ID : String){
         val shared = context?.getSharedPreferences("UserId", Context.MODE_PRIVATE)
         val editor = shared?.edit()?.putString("ID", ID)?.apply()
+        Log.d("AAAAA", editor.toString())
     }
 }
